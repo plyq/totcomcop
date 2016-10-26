@@ -1,0 +1,58 @@
+package com.filesys.gui;
+
+import javax.swing.*;
+import java.awt.*;
+
+/**
+ * Created by plyq on 26.10.16.
+ */
+public class MainWindow extends JFrame {
+
+    public MainWindow(){
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setSize(WIDTH, HEIGHT);
+        setContentPane(mainPanel);
+        setLocationRelativeTo(null);
+    }
+
+    public JTable getLeftTable() {
+        return leftTable;
+    }
+
+    public void setLeftTable(JTable leftTable) {
+        this.leftTable = leftTable;
+    }
+
+    public JTable getRightTable() {
+        return rightTable;
+    }
+
+    public void setRightTable(JTable rightTable) {
+        this.rightTable = rightTable;
+    }
+
+    public JScrollPane getLeftTableScroll() {
+        return leftTableScroll;
+    }
+
+    public void setLeftTableScroll(JScrollPane leftTableScroll) {
+        this.leftTableScroll = leftTableScroll;
+    }
+
+    public JScrollPane getRightTableScroll() {
+        return rightTableScroll;
+    }
+
+    public void setRightTableScroll(JScrollPane rightTableScroll) {
+        this.rightTableScroll = rightTableScroll;
+    }
+
+    private JTable leftTable;
+    private JTable rightTable;
+    private JPanel mainPanel;
+    private JScrollPane leftTableScroll;
+    private JScrollPane rightTableScroll;
+    private static final int WIDTH = 800;
+    private static final int HEIGHT = 400;
+
+}
