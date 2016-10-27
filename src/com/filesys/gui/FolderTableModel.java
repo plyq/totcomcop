@@ -33,6 +33,13 @@ public class FolderTableModel extends AbstractTableModel{
         return getRowAttributeAt(content[rowIndex], columnIndex);
     }
 
+    public void setFolder(File folder) {
+        this.folder = folder;
+        this.content = folder.list();
+        this.columns = new String[]{"FileName", "Size"};
+        this.columnClasses = new Class[]{String.class, BitString.class};
+    }
+
     private File folder;
     private String[] content;
     private String[] columns;

@@ -1,7 +1,6 @@
 package com.filesys.gui;
 
 import javax.swing.*;
-import java.awt.*;
 
 /**
  * Created by plyq on 26.10.16.
@@ -47,11 +46,21 @@ public class MainWindow extends JFrame {
         this.rightTableScroll = rightTableScroll;
     }
 
+    public JButton getBackRightBtn() {
+        return backRightBtn;
+    }
+
+    public JButton getBackLeftBtn() {
+        return backLeftBtn;
+    }
+
     private JTable leftTable;
     private JTable rightTable;
     private JPanel mainPanel;
     private JScrollPane leftTableScroll;
     private JScrollPane rightTableScroll;
+    private JButton backLeftBtn;
+    private JButton backRightBtn;
     private static final int WIDTH = 800;
     private static final int HEIGHT = 400;
 
