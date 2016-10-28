@@ -1,8 +1,12 @@
 package com.filesys.gui;
 
 import javax.swing.*;
+import javax.swing.table.JTableHeader;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 
 /**
@@ -41,6 +45,8 @@ public class Controller {
         mainWindow = new MainWindow();
         leftFolder = new File(System.getProperty("user.home"));
         rightFolder = new File(System.getProperty("user.home"));
+        mainWindow.getLeftFullDestTextArea().setText(leftFolder.getAbsolutePath());
+        mainWindow.getRightFullDestTextArea().setText(rightFolder.getAbsolutePath());
         modelLeftTable = new FolderTableModel(leftFolder);
         modelRightTable = new FolderTableModel(rightFolder);
         mainWindow.getLeftTable().setModel(modelLeftTable);
@@ -53,6 +59,9 @@ public class Controller {
         listeners = new Listeners();
         backLeftBtn.addActionListener(listeners.getBackLeftBtnListener());
         backRightBtn.addActionListener(listeners.getBackRightBtnListener());
+        mainWindow.getLeftTable().addMouseListener(listeners.getTableListener());
+        mainWindow.getRightTable().addMouseListener(listeners.getTableListener());
+        mainWindow.getLeftTable().getTableHeader().addMouseListener(listeners.getHeaderListener());
     }
 
     private MainWindow mainWindow;
@@ -73,6 +82,42 @@ public class Controller {
             return new BackRightBtnListener();
         }
 
+        private MouseAdapter getHeaderListener() {
+            return new MouseAdapter() {
+                public void mousePressed(MouseEvent me) {
+                    JTableHeader tableHeader =(JTableHeader) me.getSource();
+                    JTable table = tableHeader.getTable();
+                    Point p = me.getPoint();
+                    int iCol = tableHeader.columnAtPoint(p);
+                    if (me.getClickCount() == 2) {
+                        ((FolderTableModel) table.getModel()).sortDataByCol(iCol);
+                        ((FolderTableModel) table.getModel()).fireTableDataChanged();
+                    }
+                }
+            };
+        }
+
+        private MouseAdapter getTableListener() {
+            return new MouseAdapter() {
+                public void mousePressed(MouseEvent me) {
+                    JTable table =(JTable) me.getSource();
+                    Point p = me.getPoint();
+                    int iRow = table.rowAtPoint(p);
+                    int iCol = table.columnAtPoint(p);
+                    if (me.getClickCount() == 2 && iCol == 0) {
+                        File currentFolder = ((FolderTableModel) table.getModel()).getFolder();
+                        File destinationFolder = new File(currentFolder, (String) table.getModel().getValueAt(iRow, iCol));
+                        ((FolderTableModel) table.getModel()).setFolder(destinationFolder);
+                        leftFolder = modelLeftTable.getFolder();
+                        rightFolder = modelRightTable.getFolder();
+                        ((FolderTableModel) table.getModel()).fireTableDataChanged();
+                        mainWindow.getLeftFullDestTextArea().setText(String.valueOf(leftFolder));
+                        mainWindow.getRightFullDestTextArea().setText(String.valueOf(rightFolder));
+                    }
+                }
+            };
+        }
+
         private class BackLeftBtnListener implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -81,6 +126,7 @@ public class Controller {
                     leftFolder = parent;
                     modelLeftTable.setFolder(parent);
                     modelLeftTable.fireTableDataChanged();
+                    mainWindow.getLeftFullDestTextArea().setText(String.valueOf(leftFolder));
                 }
             }
         }
@@ -92,6 +138,7 @@ public class Controller {
                     rightFolder = parent;
                     modelRightTable.setFolder(parent);
                     modelRightTable.fireTableDataChanged();
+                    mainWindow.getRightFullDestTextArea().setText(String.valueOf(rightFolder));
                 }
             }
         }

@@ -1,7 +1,12 @@
 package com.filesys.gui;
 
+import com.sun.org.apache.xml.internal.utils.StringComparable;
+
 import javax.swing.table.AbstractTableModel;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Created by plyq on 26.10.16.
@@ -11,8 +16,10 @@ public class FolderTableModel extends AbstractTableModel{
     public FolderTableModel(File folder) {
         this.folder = folder;
         this.content = folder.list();
-        this.columns = new String[]{"FileName", "Size"};
+        this.columns = new String[]{"Name", "Size"};
         this.columnClasses = new Class[]{String.class, BitString.class};
+        initFileContent();
+        sortOrder = 0;
     }
 
     public String getColumnName(int col) { return columns[col]; }
@@ -20,6 +27,7 @@ public class FolderTableModel extends AbstractTableModel{
 
     @Override
     public int getRowCount() {
+        if (content == null) return 0;
         return content.length;
     }
 
@@ -36,14 +44,74 @@ public class FolderTableModel extends AbstractTableModel{
     public void setFolder(File folder) {
         this.folder = folder;
         this.content = folder.list();
-        this.columns = new String[]{"FileName", "Size"};
         this.columnClasses = new Class[]{String.class, BitString.class};
+        initFileContent();
+        sortOrder = 0;
     }
 
+    public File getFolder() {
+        return folder;
+    }
+
+    public void sortDataByCol (int iRow){
+        Comparator comparator;
+        if (sortOrder == 0) {
+            sortOrder = 1;
+        } else {
+            sortOrder = -1 * sortOrder;
+        }
+        switch (iRow){
+            case 0:
+                comparator = new NameComparator();
+                break;
+            case 1:
+                comparator = new SizeComparator();
+                break;
+            default:
+                comparator = new NameComparator();
+                break;
+        }
+        Collections.sort(fileContent, comparator);
+        for (int i = 0; i < content.length; i++) {
+            content[i] = fileContent.get(i).getName();
+        }
+    }
+
+
+    private int sortOrder;
+    private ArrayList<File> fileContent;
     private File folder;
     private String[] content;
     private String[] columns;
     private Class[] columnClasses;
+
+    private void initFileContent(){
+        fileContent = new ArrayList<>();
+        for (String filename :
+                content) {
+            fileContent.add(new File(folder, filename));
+        }
+    }
+
+    private class NameComparator implements Comparator<File>{
+        @Override
+        public int compare(File o1, File o2) {
+            boolean isO1Folder = o1.isDirectory();
+            boolean isO2Folder = o2.isDirectory();
+            if (isO1Folder && !isO2Folder) return 1 * sortOrder;
+            if (!isO1Folder && isO2Folder) return -1 * sortOrder;
+            return o1.getName().compareTo(o2.getName());
+        }
+    }
+    private class SizeComparator implements Comparator<File>{
+        @Override
+        public int compare(File o1, File o2) {
+            BitString bitStringO1 = new BitString(o1.length());
+            BitString bitStringO2 = new BitString(o2.length());
+            return bitStringO1.compareTo(bitStringO2);
+        }
+    }
+
     private Object getRowAttributeAt(String filename, int columnIndex){
         switch (columnIndex){
             case 0:

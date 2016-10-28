@@ -23,7 +23,7 @@
           <component id="5276f" class="javax.swing.JTable" binding="leftTable">
             <constraints/>
             <properties>
-              <autoCreateRowSorter value="true"/>
+              <autoCreateRowSorter value="false"/>
               <autoResizeMode value="2"/>
               <rowSelectionAllowed value="true"/>
               <showHorizontalLines value="false"/>
@@ -48,11 +48,11 @@
             <constraints/>
             <properties>
               <alignmentX value="0.5"/>
-              <autoCreateRowSorter value="true"/>
+              <autoCreateRowSorter value="false"/>
               <autoResizeMode value="2"/>
               <cellSelectionEnabled value="false"/>
               <columnSelectionAllowed value="false"/>
-              <rowSelectionAllowed value="true"/>
+              <rowSelectionAllowed value="false"/>
               <showHorizontalLines value="false"/>
             </properties>
             <clientProperties>
@@ -79,6 +79,24 @@
               <text value="Up"/>
             </properties>
           </component>
+          <hspacer id="662ce">
+            <constraints/>
+          </hspacer>
+          <component id="66340" class="javax.swing.JTextArea" binding="leftFullDestTextArea">
+            <constraints/>
+            <properties>
+              <alignmentX value="0.5"/>
+              <autoscrolls value="false"/>
+              <background color="-1513240"/>
+              <editable value="false"/>
+              <font size="8"/>
+              <margin top="10" left="0" bottom="0" right="0"/>
+              <maximumSize width="120" height="20"/>
+              <minimumSize width="120" height="20"/>
+              <preferredSize width="120" height="20"/>
+              <text value=""/>
+            </properties>
+          </component>
         </children>
       </toolbar>
       <toolbar id="e3143">
@@ -97,6 +115,24 @@
             <constraints/>
             <properties>
               <text value="Up"/>
+            </properties>
+          </component>
+          <hspacer id="dc6f8">
+            <constraints/>
+          </hspacer>
+          <component id="57b12" class="javax.swing.JTextArea" binding="rightFullDestTextArea">
+            <constraints/>
+            <properties>
+              <alignmentX value="0.5"/>
+              <autoscrolls value="false"/>
+              <background color="-1513240"/>
+              <editable value="false"/>
+              <font size="8"/>
+              <margin top="10" left="0" bottom="0" right="0"/>
+              <maximumSize width="120" height="20"/>
+              <minimumSize width="120" height="20"/>
+              <preferredSize width="120" height="20"/>
+              <text value=""/>
             </properties>
           </component>
         </children>

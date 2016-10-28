@@ -54,6 +54,14 @@ public class MainWindow extends JFrame {
         return backLeftBtn;
     }
 
+    public JTextArea getLeftFullDestTextArea() {
+        return leftFullDestTextArea;
+    }
+
+    public JTextArea getRightFullDestTextArea() {
+        return rightFullDestTextArea;
+    }
+
     private JTable leftTable;
     private JTable rightTable;
     private JPanel mainPanel;
@@ -61,6 +69,8 @@ public class MainWindow extends JFrame {
     private JScrollPane rightTableScroll;
     private JButton backLeftBtn;
     private JButton backRightBtn;
+    private JTextArea leftFullDestTextArea;
+    private JTextArea rightFullDestTextArea;
     private static final int WIDTH = 800;
     private static final int HEIGHT = 400;
 
