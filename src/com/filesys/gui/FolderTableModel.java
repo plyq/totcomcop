@@ -1,7 +1,5 @@
 package com.filesys.gui;
 
-import com.sun.org.apache.xml.internal.utils.StringComparable;
-
 import javax.swing.table.AbstractTableModel;
 import java.io.File;
 import java.util.ArrayList;
@@ -19,7 +17,18 @@ public class FolderTableModel extends AbstractTableModel{
         this.columns = new String[]{"Name", "Size"};
         this.columnClasses = new Class[]{String.class, BitString.class};
         initFileContent();
-        sortOrder = 0;
+        sortOrder = new int [2];
+    }
+
+    public void update(){
+        this.content = folder.list();
+        this.columns = new String[]{"Name", "Size"};
+        this.columnClasses = new Class[]{String.class, BitString.class};
+        initFileContent();
+    }
+
+    public ArrayList<File> getFileContent() {
+        return fileContent;
     }
 
     public String getColumnName(int col) { return columns[col]; }
@@ -46,7 +55,6 @@ public class FolderTableModel extends AbstractTableModel{
         this.content = folder.list();
         this.columnClasses = new Class[]{String.class, BitString.class};
         initFileContent();
-        sortOrder = 0;
     }
 
     public File getFolder() {
@@ -55,10 +63,10 @@ public class FolderTableModel extends AbstractTableModel{
 
     public void sortDataByCol (int iRow){
         Comparator comparator;
-        if (sortOrder == 0) {
-            sortOrder = 1;
+        if (sortOrder[iRow] == 0) {
+            sortOrder[iRow] = 1;
         } else {
-            sortOrder = -1 * sortOrder;
+            sortOrder[iRow] = -1 * sortOrder[iRow];
         }
         switch (iRow){
             case 0:
@@ -78,7 +86,8 @@ public class FolderTableModel extends AbstractTableModel{
     }
 
 
-    private int sortOrder;
+    private int[] sortOrder;
+
     private ArrayList<File> fileContent;
     private File folder;
     private String[] content;
@@ -87,9 +96,11 @@ public class FolderTableModel extends AbstractTableModel{
 
     private void initFileContent(){
         fileContent = new ArrayList<>();
-        for (String filename :
-                content) {
-            fileContent.add(new File(folder, filename));
+        if (content != null) {
+            for (String filename :
+                    content) {
+                fileContent.add(new File(folder, filename));
+            }
         }
     }
 
@@ -98,17 +109,28 @@ public class FolderTableModel extends AbstractTableModel{
         public int compare(File o1, File o2) {
             boolean isO1Folder = o1.isDirectory();
             boolean isO2Folder = o2.isDirectory();
-            if (isO1Folder && !isO2Folder) return 1 * sortOrder;
-            if (!isO1Folder && isO2Folder) return -1 * sortOrder;
-            return o1.getName().compareTo(o2.getName());
+            if (isO1Folder && !isO2Folder) return -1;
+            if (!isO1Folder && isO2Folder) return 1;
+            return sortOrder[0] * o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
         }
     }
     private class SizeComparator implements Comparator<File>{
         @Override
         public int compare(File o1, File o2) {
+            boolean isO1Folder = o1.isDirectory();
+            boolean isO2Folder = o2.isDirectory();
+            if (isO1Folder && !isO2Folder) {
+                return -1;
+            }
+            if (!isO1Folder && isO2Folder) {
+                return 1;
+            }
+            if (isO1Folder && isO2Folder) {
+                return sortOrder[0] * o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
+            }
             BitString bitStringO1 = new BitString(o1.length());
             BitString bitStringO2 = new BitString(o2.length());
-            return bitStringO1.compareTo(bitStringO2);
+            return sortOrder[1] * bitStringO1.compareTo(bitStringO2);
         }
     }
 
