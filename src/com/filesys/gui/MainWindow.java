@@ -6,6 +6,7 @@ import javax.swing.*;
  * Created by plyq on 26.10.16.
  */
 public class MainWindow extends JFrame {
+    //main window elements
 
     public MainWindow(){
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -92,6 +93,7 @@ public class MainWindow extends JFrame {
 
 }
 
+//class for dialog when folder is adding
 class AddNewFolderDialog extends JDialog {
     public JButton getConfirmBtn() {
         return confirmBtn;

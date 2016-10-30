@@ -14,6 +14,7 @@ import java.util.ArrayList;
 /**
  * Created by Mashkovsky on 28.10.2016.
  */
+//class for all thread operations with files
 public class ToolsForFiles {
 
     public static class CopyThread extends Thread{
@@ -71,6 +72,8 @@ public class ToolsForFiles {
         private File dest;
     }
 
+
+    //method for updating Table content. calling after all operations with files
     public static void  infoContentChanged(File target){
         if (Runner.getCONTROLLER().getLeftFolder().equals(target)){
             Runner.getCONTROLLER().getModelLeftTable().update();

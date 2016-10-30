@@ -19,6 +19,8 @@ import java.util.Date;
  * Created by plyq on 26.10.16.
  */
 public class Controller {
+
+    //Simple constructor
     public Controller() {
         initComponents();
         initListeners();
@@ -26,7 +28,7 @@ public class Controller {
 
     public void showMainWindow(){
         mainWindow.setVisible(true);
-    }
+    } //show main frame
 
     public FolderTableModel getModelLeftTable() {
         return modelLeftTable;
@@ -41,38 +43,55 @@ public class Controller {
     }
 
     private void initComponents(){
+        //init main frame
         mainWindow = new MainWindow();
+
+        //left/right shown folder File var. Set up default value
         leftFolder = new File(System.getProperty("user.home"));
         rightFolder = new File(System.getProperty("user.home"));
+
+        //text, that show current folder
         mainWindow.getLeftFullDestTextArea().setText(leftFolder.getAbsolutePath());
         mainWindow.getRightFullDestTextArea().setText(rightFolder.getAbsolutePath());
+
+        //init left/right tables with its models
         modelLeftTable = new FolderTableModel(leftFolder);
         modelRightTable = new FolderTableModel(rightFolder);
         mainWindow.getLeftTable().setModel(modelLeftTable);
         mainWindow.getRightTable().setModel(modelRightTable);
+        //some beauty: fix "size" column width.
         mainWindow.getLeftTable().getColumnModel().getColumn(1).setMaxWidth(100);
         mainWindow.getLeftTable().getColumnModel().getColumn(1).setMinWidth(100);
         mainWindow.getLeftTable().getColumnModel().getColumn(1).setPreferredWidth(100);
         mainWindow.getRightTable().getColumnModel().getColumn(1).setMaxWidth(100);
         mainWindow.getRightTable().getColumnModel().getColumn(1).setMinWidth(100);
         mainWindow.getRightTable().getColumnModel().getColumn(1).setPreferredWidth(100);
+        //some beauty: split folders and files by color
         mainWindow.getLeftTable().getColumnModel().getColumn(0).setCellRenderer(cellRenderer);
         mainWindow.getRightTable().getColumnModel().getColumn(0).setCellRenderer(cellRenderer);
+
+        //add buttons:
+        //go to parent folder
         backLeftBtn = mainWindow.getBackLeftBtn();
         backRightBtn = mainWindow.getBackRightBtn();
+        //copy one side selection to other side
         copyLeftBtn = mainWindow.getCopyLeftBtn();
         copyRightBtn = mainWindow.getCopyRightBtn();
+        //delete selection
         delLeftBtn = mainWindow.getDelLeftBtn();
         delRightBtn = mainWindow.getDelRightBtn();
+        //move selection from one side to other
         movLeftBtn = mainWindow.getMovLeftBtn();
         movRightBtn = mainWindow.getMovRightBtn();
+        //add new folder: button
         leftAddBtn = mainWindow.getLeftAddBtn();
         rightAddBtn = mainWindow.getRightAddBtn();
+        //add new folder: dialog: name of new  folder
         addNewFolderLeftDialog = new AddNewFolderDialog(mainWindow, "Add folder");
         addNewFolderRightDialog = new AddNewFolderDialog(mainWindow, "Add folder");
     }
 
-    private void initListeners(){
+    private void initListeners(){ //apply listeners to buttons and tables
         listeners = new Listeners();
         backLeftBtn.addActionListener(listeners.getBackLeftBtnListener());
         backRightBtn.addActionListener(listeners.getBackRightBtnListener());
@@ -114,6 +133,7 @@ public class Controller {
 
     private class Listeners {
 
+        //getters for all listeners
         private BackLeftBtnListener getBackLeftBtnListener() { return new BackLeftBtnListener(); }
         private BackRightBtnListener getBackRightBtnListener() { return new BackRightBtnListener(); }
         private CopyLeftBtnListener getCopyLeftBtnListener() { return new CopyLeftBtnListener(); }
@@ -127,6 +147,8 @@ public class Controller {
         private AddLeftDialogListener getAddLeftDialogListener() { return new AddLeftDialogListener(); }
         private AddRightDialogListener getAddRightDialogListener() { return new AddRightDialogListener(); }
 
+
+        //sorting listener
         private MouseAdapter getHeaderListener() {
             return new MouseAdapter() {
                 public void mousePressed(MouseEvent me) {
@@ -142,6 +164,7 @@ public class Controller {
             };
         }
 
+        //table listener. 2click  open
         private MouseAdapter getTableListener() {
             return new MouseAdapter() {
                 public void mousePressed(MouseEvent me) {
@@ -159,13 +182,11 @@ public class Controller {
                         mainWindow.getLeftFullDestTextArea().setText(String.valueOf(leftFolder));
                         mainWindow.getRightFullDestTextArea().setText(String.valueOf(rightFolder));
                     }
-                    /*if (me.getClickCount() == 1) {
-                        table.setRowSelectionInterval(iRow, iRow);
-                    }*/
                 }
             };
         }
 
+        //above listeners for left and right button panels
         private class BackLeftBtnListener implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent e) {

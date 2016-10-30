@@ -10,8 +10,13 @@ import java.util.EnumSet;
 import static java.nio.file.FileVisitResult.CONTINUE;
 import static java.nio.file.FileVisitResult.SKIP_SUBTREE;
 
+/**
+ * Created by Mashkovsky on 28.10.2016.
+ */
+//Thanks oracle documentation. This class contains walking on tree and copying files one by one.
 public class Copy {
 
+    //simply copy file
     static void copyFile(Path source, Path target) {
         try {
             Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
@@ -20,6 +25,7 @@ public class Copy {
         }
     }
 
+    //tree class
     static class TreeCopier implements FileVisitor<Path> {
         private final Path source;
         private final Path target;
@@ -29,6 +35,7 @@ public class Copy {
             this.target = target;
         }
 
+        //Copy folder, when visit it
         @Override
         public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
             Path newdir = target.resolve(source.relativize(dir));
@@ -43,17 +50,20 @@ public class Copy {
             return CONTINUE;
         }
 
+        //Copy file when visit it
         @Override
         public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
             copyFile(file, target.resolve(source.relativize(file)));
             return CONTINUE;
         }
 
+        //Do nothing when working with folder and folder content ended
         @Override
         public FileVisitResult postVisitDirectory(Path dir, IOException exc) {
             return CONTINUE;
         }
 
+        //Check some bad cases
         @Override
         public FileVisitResult visitFileFailed(Path file, IOException exc) {
             if (exc instanceof FileSystemLoopException) {
@@ -66,6 +76,7 @@ public class Copy {
     }
 
 
+    //main method for using external
     public static void doCopy(ArrayList<File> source, File target) throws IOException {
         // check if target is a directory
         boolean isDir = target.isDirectory();

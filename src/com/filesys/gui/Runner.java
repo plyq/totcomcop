@@ -5,6 +5,7 @@ import java.awt.*;
 /**
  * Created by plyq on 26.10.16.
  */
+//class for starting this app
 public class Runner {
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {

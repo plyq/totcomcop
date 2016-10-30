@@ -13,8 +13,11 @@ import static java.nio.file.FileVisitResult.SKIP_SUBTREE;
 /**
  * Created by plyq on 30.10.16.
  */
+
+//This class contains walking on tree and deleting files one by one.
 public class Delete {
 
+    //simple delete file
     static void deleteFile(Path source) {
         try {
             Files.delete(source);
@@ -23,6 +26,8 @@ public class Delete {
         }
     }
 
+
+    //tree class for deleting files and folders
     static class TreeDeleter implements FileVisitor<Path> {
         private final Path source;
 
@@ -30,17 +35,20 @@ public class Delete {
             this.source = source;
         }
 
+        //when visit a folder do nothing, cause we previously needed to delete all content of folder
         @Override
         public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
             return CONTINUE;
         }
 
+        //delete file
         @Override
         public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
             deleteFile(file);
             return CONTINUE;
         }
 
+        //delete folder, when we delete all content
         @Override
         public FileVisitResult postVisitDirectory(Path dir, IOException exc) {
             try {
@@ -57,6 +65,8 @@ public class Delete {
             return CONTINUE;
         }
 
+
+        //Check some bad cases
         @Override
         public FileVisitResult visitFileFailed(Path file, IOException exc) {
             if (exc instanceof FileSystemLoopException) {
@@ -68,6 +78,7 @@ public class Delete {
         }
     }
 
+    //main method for using external
     public static void doDelete(ArrayList<File> source) throws IOException {
         for (File file : source) {
             EnumSet<FileVisitOption> opts = EnumSet.of(FileVisitOption.FOLLOW_LINKS);

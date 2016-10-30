@@ -9,28 +9,28 @@ import java.util.Comparator;
 /**
  * Created by plyq on 26.10.16.
  */
+
+//class for our left and right tables.
 public class FolderTableModel extends AbstractTableModel{
 
     public FolderTableModel(File folder) {
-        this.folder = folder;
-        this.content = folder.list();
-        this.columns = new String[]{"Name", "Size"};
-        this.columnClasses = new Class[]{String.class, BitString.class};
-        initFileContent();
-        sortOrder = new int [2];
+        this.folder = folder; //current shown folder
+        this.content = folder.list(); //content of this folder - String values
+        this.columns = new String[]{"Name", "Size"}; //column names
+        this.columnClasses = new Class[]{String.class, BitString.class}; //column classes
+        initFileContent(); //Create content of this folder - File values
+        sortOrder = new int [2]; //+-1,0 - sort order for each column. default 0 - no sorted
     }
 
+    //when folder content is changed we need to update whole model
     public void update(){
         this.content = folder.list();
-        this.columns = new String[]{"Name", "Size"};
-        this.columnClasses = new Class[]{String.class, BitString.class};
         initFileContent();
     }
 
     public ArrayList<File> getFileContent() {
         return fileContent;
     }
-
     public String getColumnName(int col) { return columns[col]; }
     public Class getColumnClass(int col) { return columnClasses[col]; }
 
@@ -53,7 +53,6 @@ public class FolderTableModel extends AbstractTableModel{
     public void setFolder(File folder) {
         this.folder = folder;
         this.content = folder.list();
-        this.columnClasses = new Class[]{String.class, BitString.class};
         initFileContent();
     }
 
@@ -61,13 +60,17 @@ public class FolderTableModel extends AbstractTableModel{
         return folder;
     }
 
+
+    //sorting - 2 cases
     public void sortDataByCol (int iRow){
         Comparator comparator;
+        //switch order
         if (sortOrder[iRow] == 0) {
             sortOrder[iRow] = 1;
         } else {
             sortOrder[iRow] = -1 * sortOrder[iRow];
         }
+        //1 case - by Name, 2 case - by size
         switch (iRow){
             case 0:
                 comparator = new NameComparator();
@@ -87,7 +90,6 @@ public class FolderTableModel extends AbstractTableModel{
 
 
     private int[] sortOrder;
-
     private ArrayList<File> fileContent;
     private File folder;
     private String[] content;
@@ -104,13 +106,20 @@ public class FolderTableModel extends AbstractTableModel{
         }
     }
 
+
+    //add some Comparator classes for sorting
     private class NameComparator implements Comparator<File>{
         @Override
         public int compare(File o1, File o2) {
             boolean isO1Folder = o1.isDirectory();
             boolean isO2Folder = o2.isDirectory();
-            if (isO1Folder && !isO2Folder) return -1;
-            if (!isO1Folder && isO2Folder) return 1;
+            //Folders and files sort independantly
+            if (isO1Folder && !isO2Folder) {
+                return -1;
+            }
+            if (!isO1Folder && isO2Folder) {
+                return 1;
+            }
             return sortOrder[0] * o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
         }
     }
@@ -119,12 +128,14 @@ public class FolderTableModel extends AbstractTableModel{
         public int compare(File o1, File o2) {
             boolean isO1Folder = o1.isDirectory();
             boolean isO2Folder = o2.isDirectory();
+            //Folders and files sort independantly
             if (isO1Folder && !isO2Folder) {
                 return -1;
             }
             if (!isO1Folder && isO2Folder) {
                 return 1;
             }
+            //Folders always sort by names
             if (isO1Folder && isO2Folder) {
                 return sortOrder[0] * o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
             }
@@ -148,6 +159,8 @@ public class FolderTableModel extends AbstractTableModel{
                 return null;
         }
     }
+
+    //simple class for file sizes
     private class BitString extends Number implements Comparable<BitString>{
         public BitString(Long value) {
             this.value = value;

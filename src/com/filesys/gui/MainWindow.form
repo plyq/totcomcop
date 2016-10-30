@@ -31,7 +31,7 @@
               <background color="-1118482"/>
               <cellSelectionEnabled value="false"/>
               <columnSelectionAllowed value="false"/>
-              <focusable value="false"/>
+              <focusable value="true"/>
               <opaque value="true"/>
               <rowSelectionAllowed value="true"/>
               <showHorizontalLines value="false"/>
@@ -63,7 +63,7 @@
               <background color="-1118482"/>
               <cellSelectionEnabled value="false"/>
               <columnSelectionAllowed value="false"/>
-              <focusable value="false"/>
+              <focusable value="true"/>
               <opaque value="true"/>
               <rowSelectionAllowed value="true"/>
               <showHorizontalLines value="false"/>
