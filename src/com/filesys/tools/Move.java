@@ -10,21 +10,24 @@ import java.util.EnumSet;
 import static java.nio.file.FileVisitResult.CONTINUE;
 import static java.nio.file.FileVisitResult.SKIP_SUBTREE;
 
-public class Copy {
+/**
+ * Created by plyq on 30.10.16.
+ */
+public class Move {
 
-    static void copyFile(Path source, Path target) {
+    static void moveFile(Path source, Path target) {
         try {
-            Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
+            Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException x) {
-            System.err.format("Unable to copy: %s: %s%n", source, x);
+            System.err.format("Unable to move: %s: %s%n", source, x);
         }
     }
 
-    static class TreeCopier implements FileVisitor<Path> {
+    static class TreeMover implements FileVisitor<Path> {
         private final Path source;
         private final Path target;
 
-        TreeCopier(Path source, Path target) {
+        TreeMover(Path source, Path target) {
             this.source = source;
             this.target = target;
         }
@@ -33,7 +36,7 @@ public class Copy {
         public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
             Path newdir = target.resolve(source.relativize(dir));
             try {
-                Files.copy(dir, newdir);
+                Files.move(dir, newdir);
             } catch (FileAlreadyExistsException x) {
                 // ignore
             } catch (IOException x) {
@@ -45,7 +48,7 @@ public class Copy {
 
         @Override
         public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
-            copyFile(file, target.resolve(source.relativize(file)));
+            moveFile(file, target.resolve(source.relativize(file)));
             return CONTINUE;
         }
 
@@ -66,7 +69,7 @@ public class Copy {
     }
 
 
-    public static void doCopy(ArrayList<File> source, File target) throws IOException {
+    public static void doMove(ArrayList<File> source, File target) throws IOException {
         // check if target is a directory
         boolean isDir = target.isDirectory();
 
@@ -75,12 +78,11 @@ public class Copy {
             Path dest = (isDir) ? target.toPath().resolve(file.toPath().getFileName()) : target.toPath();
 
             EnumSet<FileVisitOption> opts = EnumSet.of(FileVisitOption.FOLLOW_LINKS);
-            TreeCopier tc = new TreeCopier(file.toPath(), dest);
-            Files.walkFileTree(file.toPath(), opts, Integer.MAX_VALUE, tc);
+            Move.TreeMover tm = new Move.TreeMover(file.toPath(), dest);
+            Files.walkFileTree(file.toPath(), opts, Integer.MAX_VALUE, tm);
             ToolsForFiles.infoContentChanged(target);
+            ToolsForFiles.infoContentChanged(file.getParentFile());
         }
 
     }
 }
-
-

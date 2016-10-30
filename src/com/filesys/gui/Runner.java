@@ -10,12 +10,17 @@ public class Runner {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    Controller controller = new Controller();
-                    controller.showMainWindow();
+                    CONTROLLER = new Controller();
+                    CONTROLLER.showMainWindow();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         });
     }
+
+    public static Controller getCONTROLLER() {
+        return CONTROLLER;
+    }
+    private static Controller CONTROLLER;
 }

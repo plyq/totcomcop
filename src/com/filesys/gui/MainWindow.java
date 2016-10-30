@@ -18,32 +18,8 @@ public class MainWindow extends JFrame {
         return leftTable;
     }
 
-    public void setLeftTable(JTable leftTable) {
-        this.leftTable = leftTable;
-    }
-
     public JTable getRightTable() {
         return rightTable;
-    }
-
-    public void setRightTable(JTable rightTable) {
-        this.rightTable = rightTable;
-    }
-
-    public JScrollPane getLeftTableScroll() {
-        return leftTableScroll;
-    }
-
-    public void setLeftTableScroll(JScrollPane leftTableScroll) {
-        this.leftTableScroll = leftTableScroll;
-    }
-
-    public JScrollPane getRightTableScroll() {
-        return rightTableScroll;
-    }
-
-    public void setRightTableScroll(JScrollPane rightTableScroll) {
-        this.rightTableScroll = rightTableScroll;
     }
 
     public JButton getBackRightBtn() {
@@ -70,6 +46,30 @@ public class MainWindow extends JFrame {
         return copyRightBtn;
     }
 
+    public JButton getLeftAddBtn() {
+        return leftAddBtn;
+    }
+
+    public JButton getRightAddBtn() {
+        return rightAddBtn;
+    }
+
+    public JButton getDelLeftBtn() {
+        return delLeftBtn;
+    }
+
+    public JButton getDelRightBtn() {
+        return delRightBtn;
+    }
+
+    public JButton getMovLeftBtn() {
+        return movLeftBtn;
+    }
+
+    public JButton getMovRightBtn() {
+        return movRightBtn;
+    }
+
     private JTable leftTable;
     private JTable rightTable;
     private JPanel mainPanel;
@@ -81,7 +81,38 @@ public class MainWindow extends JFrame {
     private JTextArea rightFullDestTextArea;
     private JButton copyLeftBtn;
     private JButton copyRightBtn;
+    private JButton leftAddBtn;
+    private JButton rightAddBtn;
+    private JButton delLeftBtn;
+    private JButton delRightBtn;
+    private JButton movLeftBtn;
+    private JButton movRightBtn;
     private static final int WIDTH = 800;
     private static final int HEIGHT = 400;
 
+}
+
+class AddNewFolderDialog extends JDialog {
+    public JButton getConfirmBtn() {
+        return confirmBtn;
+    }
+
+    public AddNewFolderDialog(JFrame frame, String title) {
+        super(frame, title, false);
+        JPanel panel = new JPanel();
+        panel.add(new JLabel("Choose folder name"));
+        panel.add(textfield);
+        panel.add(confirmBtn);
+
+        add(panel);
+        pack();
+        setLocationRelativeTo(frame);
+    }
+
+    public String getTextFieldText() {
+        return textfield.getText();
+    }
+
+    private JTextField textfield = new JTextField(10);
+    private JButton confirmBtn = new JButton("OK");
 }
